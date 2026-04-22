@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movietix — Devinez le film</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ░░░ SCREEN: HOME ░░░ -->
+  <section id="screen-home" class="screen active" aria-label="Accueil">
+    <div class="spotlight spotlight-1"></div>
+    <div class="spotlight spotlight-2"></div>
+
+    <div class="home-content">
+      <div class="home-logo-wrap">
+        <div class="film-icon" aria-hidden="true">🎬</div>
+        <h1 class="logo-title">MOVIETIX</h1>
+        <p class="logo-sub">Le jeu du cinéphile</p>
+      </div>
+
+      <div class="home-description">
+        <p>Devinez le titre du film en révélant les mots cachés du résumé Wikipedia.</p>
+        <ul class="home-rules">
+          <li><span class="rule-icon">✅</span> Mot trouvé → il s'affiche partout</li>
+          <li><span class="rule-icon">🔥</span> Mot proche → vous brûlez !</li>
+          <li><span class="rule-icon">❌</span> 50 erreurs → partie perdue</li>
+        </ul>
+      </div>
+
+      <button id="btn-play" class="btn-ticket" aria-label="Commencer une partie">
+        <span class="ticket-stub">▶</span>
+        <span class="ticket-text">JOUER</span>
+      </button>
+
+      <p class="home-credit">Propulsé par <a href="https://fr.wikipedia.org" target="_blank" rel="noopener">Wikipédia</a></p>
+    </div>
+
+    <div class="home-filmstrip" aria-hidden="true">
+      <!-- Content duplicated for seamless infinite scroll loop -->
+      <div class="filmstrip-track">
+        <span>🎥</span><span>🎞</span><span>🎬</span><span>🎥</span>
+        <span>🎞</span><span>🎬</span><span>🎥</span><span>🎞</span>
+        <span>🎬</span><span>🎥</span><span>🎞</span><span>🎬</span>
+        <span>🎥</span><span>🎞</span><span>🎬</span><span>🎥</span>
+        <span>🎞</span><span>🎬</span><span>🎥</span><span>🎞</span>
+        <span>🎬</span><span>🎥</span><span>🎞</span><span>🎬</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░░ SCREEN: LOADING ░░░ -->
+  <section id="screen-loading" class="screen" aria-label="Chargement" aria-live="polite">
+    <div class="loading-content">
+      <div class="film-loader" aria-hidden="true">
+        <div class="reel reel-a"></div>
+        <div class="reel-tape"></div>
+        <div class="reel reel-b"></div>
+      </div>
+      <p class="loading-text">Projection en cours…</p>
+    </div>
+  </section>
+
+  <!-- ░░░ SCREEN: GAME ░░░ -->
+  <section id="screen-game" class="screen" aria-label="Partie en cours">
+
+    <!-- Header -->
+    <header class="game-header">
+      <div class="header-inner">
+        <span class="game-logo">🎬 MOVIETIX</span>
+
+        <div class="error-display" aria-live="polite">
+          <div class="error-bar-wrap" title="Erreurs restantes">
+            <div id="error-fill" class="error-fill" style="width:0%"></div>
+          </div>
+          <span id="error-label" class="error-label">0 / 50</span>
+        </div>
+      </div>
+
+      <!-- Title display -->
+      <div class="title-zone">
+        <p class="title-hint">Titre à trouver :</p>
+        <div id="title-display" class="title-display" aria-live="polite" aria-label="Titre du film"></div>
+      </div>
+    </header>
+
+    <!-- Article text -->
+    <main class="article-zone">
+      <div id="article-text" class="article-text" aria-label="Résumé Wikipedia"></div>
+    </main>
+
+    <!-- Guess panel -->
+    <footer class="guess-panel">
+      <div id="feedback" class="feedback" aria-live="assertive" aria-atomic="true" hidden></div>
+
+      <div class="guess-row">
+        <input
+          id="guess-input"
+          type="text"
+          class="guess-input"
+          placeholder="Devinez un mot…"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+          maxlength="50"
+          aria-label="Saisir un mot"
+        />
+        <button id="btn-guess" class="btn-guess" aria-label="Valider le mot">
+          Deviner
+        </button>
+      </div>
+
+      <div id="wrong-guesses" class="wrong-guesses" aria-label="Mots incorrects" aria-live="polite"></div>
+    </footer>
+  </section>
+
+  <!-- ░░░ SCREEN: WIN ░░░ -->
+  <section id="screen-win" class="screen" aria-label="Victoire">
+    <div class="win-spotlight" aria-hidden="true"></div>
+    <div id="confetti-container" class="confetti-container" aria-hidden="true"></div>
+
+    <div class="result-card win-card">
+      <div class="result-icon" aria-hidden="true">🏆</div>
+      <h2 class="result-title">BRAVO !</h2>
+      <p class="result-movie" id="win-movie-title"></p>
+      <p class="result-stats" id="win-stats"></p>
+      <button id="btn-replay-win" class="btn-ticket" aria-label="Rejouer">
+        <span class="ticket-stub">↩</span>
+        <span class="ticket-text">REJOUER</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ░░░ SCREEN: LOSE ░░░ -->
+  <section id="screen-lose" class="screen" aria-label="Défaite">
+    <div class="lose-vignette" aria-hidden="true"></div>
+
+    <div class="result-card lose-card" id="lose-card">
+      <div class="the-end-frame" aria-hidden="true">
+        <div class="the-end-holes">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p class="the-end-text">THE END</p>
+        <div class="the-end-holes">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <p class="result-movie" id="lose-movie-title"></p>
+      <p class="result-message">Pas cette fois… mais vous avez bien essayé !</p>
+      <p class="result-stats" id="lose-stats"></p>
+
+      <button id="btn-replay-lose" class="btn-ticket" aria-label="Rejouer">
+        <span class="ticket-stub">↩</span>
+        <span class="ticket-text">REJOUER</span>
+      </button>
+    </div>
+  </section>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
