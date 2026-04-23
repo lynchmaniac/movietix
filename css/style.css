@@ -851,7 +851,30 @@ a:hover { text-decoration: underline; }
   .the-end-text  { font-size: 1.5rem; }
   .article-text  { padding: .8rem 1rem; }
   .error-bar-wrap { width: 80px; }
-  .guess-panel   { padding: 1rem .8rem .8rem; }
+
+  /* Mobile layout: input controls at top, article at bottom */
+  #screen-game {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-header {
+    order: 1;
+  }
+
+  .guess-panel {
+    order: 2;
+    position: static;
+    padding: 1rem .8rem .8rem;
+    background: linear-gradient(180deg, rgba(7,7,15,1) 0%, rgba(7,7,15,.95) 100%);
+  }
+
+  .article-zone {
+    order: 3;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 300px;
+  }
 
   /* Responsive guess row: stack buttons on mobile */
   .guess-row {
@@ -867,7 +890,6 @@ a:hover { text-decoration: underline; }
   .btn-guess,
   .btn-joker {
     flex: 1 1 calc(50% - .2rem);
-    order: 2;
     padding: .65rem .8rem;
     font-size: .85rem;
   }
