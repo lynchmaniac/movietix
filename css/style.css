@@ -852,6 +852,33 @@ a:hover { text-decoration: underline; }
   .article-text  { padding: .8rem 1rem; }
   .error-bar-wrap { width: 80px; }
   .guess-panel   { padding: 1rem .8rem .8rem; }
+
+  /* Responsive guess row: stack buttons on mobile */
+  .guess-row {
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+
+  .guess-input {
+    flex: 1 1 100%;
+    order: 1;
+  }
+
+  .btn-guess,
+  .btn-joker {
+    flex: 1 1 calc(50% - .2rem);
+    order: 2;
+    padding: .65rem .8rem;
+    font-size: .85rem;
+  }
+
+  .btn-guess { order: 2; }
+  .btn-joker { order: 3; }
+
+  .joker-meta {
+    font-size: .75rem;
+    gap: .3rem;
+  }
 }
 
 @media (max-width: 400px) {
