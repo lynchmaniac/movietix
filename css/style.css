@@ -559,6 +559,57 @@ a:hover { text-decoration: underline; }
 .btn-guess:hover { background: var(--gold-light); transform: translateY(-1px); }
 .btn-guess:active { transform: translateY(0); }
 
+.btn-joker {
+  padding: .75rem 1rem;
+  background: rgba(201,162,39,.16);
+  border: 1px solid rgba(201,162,39,.35);
+  border-radius: var(--radius);
+  color: var(--gold-light);
+  font-family: var(--font-body);
+  font-size: .9rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), border-color var(--transition), opacity var(--transition);
+  white-space: nowrap;
+}
+
+.btn-joker:hover {
+  background: rgba(201,162,39,.24);
+  border-color: rgba(201,162,39,.55);
+  transform: translateY(-1px);
+}
+
+.btn-joker:active { transform: translateY(0); }
+
+.btn-joker:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+  transform: none;
+}
+
+.joker-meta {
+  max-width: 600px;
+  margin: .45rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-size: .8rem;
+}
+
+.joker-label {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.joker-count {
+  color: var(--gold-light);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
 /* Feedback */
 .feedback {
   max-width: 600px;

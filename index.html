@@ -28,6 +28,7 @@
         <ul class="home-rules">
           <li><span class="rule-icon">✅</span> Mot trouvé → il s'affiche partout</li>
           <li><span class="rule-icon">🔥</span> Mot proche → vous brûlez !</li>
+          <li><span class="rule-icon">🃏</span> 3 jokers → révèle un mot du résumé (hors titre)</li>
           <li><span class="rule-icon">❌</span> 50 erreurs → partie perdue</li>
         </ul>
       </div>
@@ -113,6 +114,14 @@
         <button id="btn-guess" class="btn-guess" aria-label="Valider le mot">
           Deviner
         </button>
+        <button id="btn-joker" class="btn-joker" aria-label="Utiliser un joker">
+          Joker
+        </button>
+      </div>
+
+      <div class="joker-meta" aria-live="polite">
+        <span class="joker-label">Jokers restants :</span>
+        <span id="joker-label" class="joker-count">3 / 3</span>
       </div>
 
       <div id="wrong-guesses" class="wrong-guesses" aria-label="Mots incorrects" aria-live="polite"></div>

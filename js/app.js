@@ -3,7 +3,8 @@ import {
   startGame, makeGuess, isWon, isLost,
   renderExtract, getTitleChunks,
   getErrorCount, getWrongGuesses, getTitle, getExtract,
-  MAX_ERRORS,
+  useJoker, getJokersLeft,
+  MAX_ERRORS, MAX_JOKERS,
 } from './game.js';
 import { playWinAnimation, clearWinAnimation, playLoseAnimation } from './animations.js';
 
@@ -20,6 +21,7 @@ const screens = {
 const els = {
   btnPlay:       document.getElementById('btn-play'),
   btnGuess:      document.getElementById('btn-guess'),
+  btnJoker:      document.getElementById('btn-joker'),
   btnReplayWin:  document.getElementById('btn-replay-win'),
   btnReplayLose: document.getElementById('btn-replay-lose'),
   guessInput:    document.getElementById('guess-input'),
@@ -28,6 +30,7 @@ const els = {
   titleDisplay:  document.getElementById('title-display'),
   errorFill:     document.getElementById('error-fill'),
   errorLabel:    document.getElementById('error-label'),
+  jokerLabel:    document.getElementById('joker-label'),
   wrongGuesses:  document.getElementById('wrong-guesses'),
   winMovieTitle: document.getElementById('win-movie-title'),
   winStats:      document.getElementById('win-stats'),
@@ -98,6 +101,11 @@ function updateGameUI() {
   els.wrongGuesses.innerHTML = wrong.length
     ? wrong.map(w => `<span class="wrong-badge">${escapeHtml(w)}</span>`).join('')
     : '';
+
+  // Joker counter + disabled state
+  const jokersLeft = getJokersLeft();
+  els.jokerLabel.textContent = `${jokersLeft} / ${MAX_JOKERS}`;
+  els.btnJoker.disabled = jokersLeft <= 0 || isWon() || isLost();
 }
 
 // ─── Guess handling ────────────────────────────────────────────────────────────
@@ -120,6 +128,12 @@ function handleGuess() {
   }
 }
 
+function handleJoker() {
+  const result = useJoker();
+  showFeedback(result);
+  updateGameUI();
+}
+
 // ─── Feedback messages ─────────────────────────────────────────────────────────
 
 const FEEDBACK = {
@@ -129,6 +143,9 @@ const FEEDBACK = {
   'correct':      { type: 'success', icon: '✅', text: 'Ce mot est dans le texte !' },
   'close':        { type: 'close',   icon: '🔥', text: 'Vous brûlez… essayez une variante !' },
   'wrong':        { type: 'error',   icon: '❌', text: 'Ce mot n\'est pas dans le texte.' },
+  'revealed':     { type: 'success', icon: '🃏', text: 'Joker utilisé : un mot du résumé a été révélé.' },
+  'no-jokers-left': { type: 'info',  icon: '🛑', text: 'Vous avez déjà utilisé vos 3 jokers.' },
+  'no-eligible-word': { type: 'info', icon: 'ℹ️', text: 'Aucun mot éligible à révéler pour le joker.' },
 };
 
 let feedbackTimer = null;
@@ -182,6 +199,7 @@ els.btnReplayWin.addEventListener('click', startNewGame);
 els.btnReplayLose.addEventListener('click', startNewGame);
 
 els.btnGuess.addEventListener('click', handleGuess);
+els.btnJoker.addEventListener('click', handleJoker);
 els.guessInput.addEventListener('keydown', e => {
   if (e.key === 'Enter') handleGuess();
 });
