@@ -1,6 +1,7 @@
 import { normalize, isClose } from './fuzzy.js';
 
 export const MAX_ERRORS = 50;
+export const MAX_JOKERS = 3;
 
 // Regex matching a "word" token in French text (letters + accented chars + ligatures)
 const WORD_RE = /[a-zA-ZÀ-ÖØ-öø-ÿŒœ]+/g;
@@ -18,6 +19,7 @@ let state = {
   triedWords: new Set(),   // normalized words already tried (found + not-found + close)
   wrongGuesses: [],       // display-form words that were wrong
   errorCount: 0,
+  jokersLeft: MAX_JOKERS,
 };
 
 // ─── Tokenization ─────────────────────────────────────────────────────────────
@@ -66,6 +68,7 @@ export function startGame(movieData) {
     triedWords: new Set(),
     wrongGuesses: [],
     errorCount: 0,
+    jokersLeft: MAX_JOKERS,
   };
 
   // Build the set of all unique normalized words in the extract
@@ -119,6 +122,29 @@ export function isLost() {
   return state.errorCount >= MAX_ERRORS;
 }
 
+/**
+ * Reveals one random non-title word from the extract.
+ * @returns {'revealed'|'no-jokers-left'|'no-eligible-word'}
+ */
+export function useJoker() {
+  if (state.jokersLeft <= 0) return 'no-jokers-left';
+
+  const candidates = [];
+  for (const word of state.uniqueWords) {
+    if (state.targetWords.has(word)) continue;
+    if (state.guessedWords.has(word)) continue;
+    candidates.push(word);
+  }
+
+  if (candidates.length === 0) return 'no-eligible-word';
+
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  state.guessedWords.add(pick);
+  state.triedWords.add(pick);
+  state.jokersLeft--;
+  return 'revealed';
+}
+
 // ─── Rendering helpers ─────────────────────────────────────────────────────────
 
 /**
@@ -169,6 +195,7 @@ export function getTitle() { return state.title; }
 export function getExtract() { return state.extract; }
 export function getTargetWords() { return new Set(state.targetWords); }
 export function getGuessedWords() { return new Set(state.guessedWords); }
+export function getJokersLeft() { return state.jokersLeft; }
 
 // ─── Utility ──────────────────────────────────────────────────────────────────
 
