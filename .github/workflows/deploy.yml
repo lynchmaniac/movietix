@@ -3,42 +3,56 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main        # déclenche le déploiement à chaque push sur main
-  workflow_dispatch: # permet le déclenchement manuel depuis GitHub
+      - main
+  workflow_dispatch:
 
-# Permissions requises pour GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Un seul déploiement à la fois ; annule les runs en attente si un nouveau push arrive
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Deploy
+  # ── Job 1 : prépare l'artifact ──────────────────────────────────────────────
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Copie les fichiers statiques dans dist/ (exclut server.js et fichiers non-web)
+      - name: Prepare static files
+        run: |
+          mkdir -p dist
+          cp index.html dist/
+          cp -r css dist/
+          cp -r js dist/
+          cp -r data dist/
+          # .nojekyll désactive le traitement Jekyll sur GitHub Pages
+          touch dist/.nojekyll
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # Pas de build — le jeu est du HTML/CSS/JS statique pur
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Déploie tout le dépôt (hors .github/)
-          path: '.'
+          path: dist/
 
+  # ── Job 2 : déploie sur GitHub Pages ───────────────────────────────────────
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deploy
         uses: actions/deploy-pages@v4
+
