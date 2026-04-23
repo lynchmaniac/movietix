@@ -166,6 +166,7 @@ export function getTitleChunks() {
 export function getErrorCount() { return state.errorCount; }
 export function getWrongGuesses() { return [...state.wrongGuesses]; }
 export function getTitle() { return state.title; }
+export function getExtract() { return state.extract; }
 export function getTargetWords() { return new Set(state.targetWords); }
 export function getGuessedWords() { return new Set(state.guessedWords); }
 

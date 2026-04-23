@@ -2,7 +2,7 @@ import { getRandomMovie } from './wikipedia.js';
 import {
   startGame, makeGuess, isWon, isLost,
   renderExtract, getTitleChunks,
-  getErrorCount, getWrongGuesses, getTitle,
+  getErrorCount, getWrongGuesses, getTitle, getExtract,
   MAX_ERRORS,
 } from './game.js';
 import { playWinAnimation, clearWinAnimation, playLoseAnimation } from './animations.js';
@@ -31,8 +31,10 @@ const els = {
   wrongGuesses:  document.getElementById('wrong-guesses'),
   winMovieTitle: document.getElementById('win-movie-title'),
   winStats:      document.getElementById('win-stats'),
+  winExtract:    document.getElementById('win-extract'),
   loseMovieTitle:document.getElementById('lose-movie-title'),
   loseStats:     document.getElementById('lose-stats'),
+  loseExtract:   document.getElementById('lose-extract'),
   confetti:      document.getElementById('confetti-container'),
   loseCard:      document.getElementById('lose-card'),
 };
@@ -150,10 +152,12 @@ function hideFeedback() {
 function showWin() {
   const errors = getErrorCount();
   const title = getTitle();
+  const extract = getExtract();
   els.winMovieTitle.textContent = `« ${title} »`;
   els.winStats.textContent = errors === 0
     ? 'Parfait — aucune erreur !'
     : `${errors} erreur${errors > 1 ? 's' : ''} commise${errors > 1 ? 's' : ''}.`;
+  els.winExtract.textContent = extract;
 
   showScreen('win');
   playWinAnimation(els.confetti);
@@ -162,8 +166,10 @@ function showWin() {
 function showLose() {
   const errors = getErrorCount();
   const title = getTitle();
+  const extract = getExtract();
   els.loseMovieTitle.textContent = `« ${title} »`;
   els.loseStats.textContent = `${errors} erreurs — fin de partie.`;
+  els.loseExtract.textContent = extract;
 
   showScreen('lose');
   playLoseAnimation(els.loseCard);
